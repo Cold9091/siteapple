@@ -31,7 +31,7 @@ export class MemStorage implements IStorage {
       {
         name: "AirSound Pro",
         description: "Fones de ouvido wireless com cancelamento de ruído ativo e qualidade de áudio excepcional.",
-        price: 29900, // $299.00
+        price: 24825000, // 248.250 AOA
         imageUrl: "https://images.unsplash.com/photo-1484704849700-f032a568e944?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
         category: "headphones",
         featured: true,
@@ -39,7 +39,7 @@ export class MemStorage implements IStorage {
       {
         name: "ChargeFast Station",
         description: "Estação de carregamento inteligente com tecnologia de carregamento rápido para múltiplos dispositivos.",
-        price: 12900, // $129.00
+        price: 10725000, // 107.250 AOA
         imageUrl: "https://images.unsplash.com/photo-1583394838336-acd977736f90?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
         category: "chargers",
         featured: true,
@@ -47,7 +47,7 @@ export class MemStorage implements IStorage {
       {
         name: "TimeSync Elite",
         description: "Smartwatch avançado com monitoramento de saúde, GPS integrado e design premium em titânio.",
-        price: 49900, // $499.00
+        price: 41500000, // 415.000 AOA
         imageUrl: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
         category: "smartwatches",
         featured: true,

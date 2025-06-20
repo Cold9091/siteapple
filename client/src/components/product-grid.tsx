@@ -12,11 +12,11 @@ export default function ProductGrid() {
   const { addToCart } = useCart();
   const { toast } = useToast();
 
-  const formatPrice = (priceInCents: number) => {
-    return new Intl.NumberFormat('pt-BR', {
+  const formatPrice = (priceInCentavos: number) => {
+    return new Intl.NumberFormat('pt-AO', {
       style: 'currency',
-      currency: 'BRL',
-    }).format(priceInCents / 100);
+      currency: 'AOA',
+    }).format(priceInCentavos / 100);
   };
 
   const handlePurchase = (product: Product) => {

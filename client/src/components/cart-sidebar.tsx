@@ -10,11 +10,11 @@ interface CartSidebarProps {
 export default function CartSidebar({ children }: CartSidebarProps) {
   const { cartItems, updateQuantity, removeFromCart, getTotalPrice } = useCart();
 
-  const formatPrice = (priceInCents: number) => {
-    return new Intl.NumberFormat('pt-BR', {
+  const formatPrice = (priceInCentavos: number) => {
+    return new Intl.NumberFormat('pt-AO', {
       style: 'currency',
-      currency: 'BRL',
-    }).format(priceInCents / 100);
+      currency: 'AOA',
+    }).format(priceInCentavos / 100);
   };
 
   return (

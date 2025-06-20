@@ -6,22 +6,22 @@ interface SupportMenuProps {
 
 const storeLocations = [
   {
-    name: 'DigitalPrime - Shopping Iguatemi',
-    address: 'Av. Brigadeiro Faria Lima, 2232 - Jardim Paulistano, São Paulo - SP',
-    phone: '(11) 3038-4500',
-    hours: 'Seg-Sáb: 10h-22h | Dom: 14h-20h'
+    name: 'DigitalPrime - Luanda Shopping',
+    address: 'Rua Rainha Ginga, 188 - Ingombota, Luanda',
+    phone: '+244 222 334 567',
+    hours: 'Seg-Sáb: 09h-21h | Dom: 14h-19h'
   },
   {
-    name: 'DigitalPrime - Barra Shopping',
-    address: 'Av. das Américas, 4666 - Barra da Tijuca, Rio de Janeiro - RJ',
-    phone: '(21) 2431-9000',
-    hours: 'Seg-Sáb: 10h-22h | Dom: 14h-20h'
+    name: 'DigitalPrime - Belas Shopping',
+    address: 'Estrada de Catete, KM 10 - Belas, Luanda',
+    phone: '+244 222 445 678',
+    hours: 'Seg-Sáb: 09h-21h | Dom: 14h-19h'
   },
   {
-    name: 'DigitalPrime - Shopping Eldorado',
-    address: 'Av. Rebouças, 3970 - Pinheiros, São Paulo - SP',
-    phone: '(11) 3032-3500',
-    hours: 'Seg-Sáb: 10h-22h | Dom: 14h-20h'
+    name: 'DigitalPrime - Marginal',
+    address: 'Marginal de Luanda, Edifício Presidente - Ingombota, Luanda',
+    phone: '+244 222 556 789',
+    hours: 'Seg-Sáb: 08h-20h | Dom: 14h-18h'
   }
 ];
 
@@ -29,19 +29,19 @@ const supportOptions = [
   {
     title: 'Central de Atendimento',
     description: 'Atendimento telefônico 24/7',
-    contact: '0800-123-4567',
+    contact: '+244 222 000 123',
     icon: Phone
   },
   {
     title: 'Suporte Técnico',
     description: 'Assistência especializada',
-    contact: '(11) 4002-8922',
+    contact: '+244 222 111 234',
     icon: Phone
   },
   {
     title: 'Email Suporte',
     description: 'Resposta em até 24h',
-    contact: 'suporte@digitalprime.com.br',
+    contact: 'suporte@digitalprime.ao',
     icon: Mail
   }
 ];

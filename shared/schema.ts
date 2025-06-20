@@ -12,7 +12,7 @@ export const products = pgTable("products", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  price: integer("price").notNull(), // price in cents
+  price: integer("price").notNull(), // price in centavos (AOA)
   imageUrl: text("image_url").notNull(),
   category: text("category").notNull(),
   featured: boolean("featured").notNull().default(false),
