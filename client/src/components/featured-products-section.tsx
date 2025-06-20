@@ -99,7 +99,7 @@ export default function FeaturedProductsSection() {
                       <Button
                         size={index === 0 ? "default" : "sm"}
                         variant="outline"
-                        className="border-white/30 text-white hover:bg-white hover:text-gray-900 rounded-full"
+                        className="border-white/30 hover:bg-white hover:text-gray-900 rounded-full text-[#000000]"
                       >
                         Ver mais
                       </Button>
