@@ -1,20 +1,33 @@
 import { ShoppingBag, Search } from "lucide-react";
+import { useState } from "react";
 import { useCart } from "@/hooks/use-cart";
 import CartSidebar from "@/components/cart-sidebar";
+import MegaMenu from "@/components/megamenu";
 
 export default function Navigation() {
   const { getTotalItems } = useCart();
   const totalItems = getTotalItems();
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+  const categories = [
+    'iPhone',
+    'Samsung', 
+    'Fones',
+    'Smartwatches',
+    'Computadores',
+    'Jogos'
+  ];
+
+  const handleCategoryHover = (category: string) => {
+    setActiveCategory(category);
+  };
+
+  const handleCategoryLeave = () => {
+    setActiveCategory(null);
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 z-50">
+    <nav className="fixed top-0 left-0 right-0 glass-navbar z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-12">
           {/* Logo Apple */}
@@ -28,34 +41,16 @@ export default function Navigation() {
 
           {/* Menu Central */}
           <div className="hidden md:flex items-center space-x-8">
-            <button
-              onClick={() => scrollToSection('products')}
-              className="apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal"
-            >
-              Fones
-            </button>
-            <button
-              onClick={() => scrollToSection('products')}
-              className="apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal"
-            >
-              Carregadores
-            </button>
-            <button
-              onClick={() => scrollToSection('products')}
-              className="apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal"
-            >
-              Smartwatches
-            </button>
-            <button
-              onClick={() => scrollToSection('products')}
-              className="apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal"
-            >
-              Acessórios
-            </button>
-            <button
-              onClick={() => scrollToSection('about')}
-              className="apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal"
-            >
+            {categories.map((category) => (
+              <button
+                key={category}
+                onMouseEnter={() => handleCategoryHover(category)}
+                className="apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal py-2"
+              >
+                {category}
+              </button>
+            ))}
+            <button className="apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal">
               Suporte
             </button>
           </div>
@@ -77,6 +72,13 @@ export default function Navigation() {
             </CartSidebar>
           </div>
         </div>
+      </div>
+      
+      <div onMouseLeave={handleCategoryLeave}>
+        <MegaMenu 
+          activeCategory={activeCategory}
+          onClose={() => setActiveCategory(null)}
+        />
       </div>
     </nav>
   );
