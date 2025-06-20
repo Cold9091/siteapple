@@ -51,7 +51,7 @@ export default function ProductGrid() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
           {isLoading ? (
             // Loading skeletons
             Array.from({ length: 3 }).map((_, index) => (
@@ -68,9 +68,13 @@ export default function ProductGrid() {
               </div>
             ))
           ) : (
-            products?.map((product) => (
-              <div key={product.id} className="group cursor-pointer">
-                <div className="apple-bg-light rounded-3xl p-8 lg:p-12 mb-6 apple-transition apple-hover">
+            products?.map((product, index) => (
+              <div 
+                key={product.id} 
+                className={`group cursor-pointer transition-all duration-1000 ${isLoading ? 'opacity-0 translate-y-8' : 'opacity-100 translate-y-0'}`}
+                style={{ animationDelay: `${index * 200}ms` }}
+              >
+                <div className="glass-card rounded-3xl p-8 lg:p-12 mb-6 apple-transition apple-hover float-animation">
                   <img 
                     src={product.imageUrl} 
                     alt={product.name}
