@@ -1,12 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
+import { useCart } from "@/hooks/use-cart";
 import type { Product } from "@shared/schema";
 
 export default function ProductGrid() {
   const { data: products, isLoading, error } = useQuery<Product[]>({
     queryKey: ['/api/products/featured'],
   });
+  const { addToCart } = useCart();
+  const { toast } = useToast();
 
   const formatPrice = (priceInCents: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -15,9 +19,12 @@ export default function ProductGrid() {
     }).format(priceInCents / 100);
   };
 
-  const handlePurchase = (productId: number) => {
-    // TODO: Implement purchase functionality
-    console.log('Purchase product:', productId);
+  const handlePurchase = (product: Product) => {
+    addToCart(product);
+    toast({
+      title: "Produto adicionado!",
+      description: `${product.name} foi adicionado ao seu carrinho.`,
+    });
   };
 
   if (error) {
@@ -81,7 +88,7 @@ export default function ProductGrid() {
                     {formatPrice(product.price)}
                   </p>
                   <Button
-                    onClick={() => handlePurchase(product.id)}
+                    onClick={() => handlePurchase(product)}
                     className="bg-[hsl(207,90%,54%)] hover:bg-[hsl(207,90%,48%)] text-white px-8 py-3 rounded-full font-medium apple-transition hover:shadow-lg hover:scale-105"
                   >
                     Comprar

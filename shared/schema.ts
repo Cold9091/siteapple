@@ -15,7 +15,7 @@ export const products = pgTable("products", {
   price: integer("price").notNull(), // price in cents
   imageUrl: text("image_url").notNull(),
   category: text("category").notNull(),
-  featured: boolean("featured").default(false),
+  featured: boolean("featured").notNull().default(false),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
