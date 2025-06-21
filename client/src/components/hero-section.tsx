@@ -59,26 +59,7 @@ export default function HeroSection() {
             </Button>
           </div>
 
-          <div className={`relative max-w-4xl mx-auto transition-all duration-1000 delay-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            <div className="glass-card rounded-3xl p-8 backdrop-blur-lg">
-              <img 
-                src="https://images.unsplash.com/photo-1484704849700-f032a568e944?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=600" 
-                alt="AirSound Pro - Fones de ouvido premium" 
-                className="w-full h-auto rounded-2xl shadow-2xl float-animation"
-              />
-              
-              {/* Floating specs */}
-              <div className="absolute top-16 -left-8 glass-card rounded-lg p-4 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
-                <p className="text-sm font-semibold text-gray-800">Cancelamento de Ruído</p>
-                <p className="text-xs text-gray-600">Adaptativo</p>
-              </div>
-              
-              <div className="absolute bottom-16 -right-8 glass-card rounded-lg p-4 transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                <p className="text-sm font-semibold text-gray-800">Bateria</p>
-                <p className="text-xs text-gray-600">30h de reprodução</p>
-              </div>
-            </div>
-          </div>
+
 
           <div className={`mt-16 text-center transition-all duration-1000 delay-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <p className="text-lg font-medium mb-2">

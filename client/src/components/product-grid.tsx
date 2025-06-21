@@ -29,7 +29,7 @@ export default function ProductGrid() {
 
   if (error) {
     return (
-      <section id="products" className="py-20 lg:py-32 bg-white">
+      <section id="products" className="py-20 lg:py-32 bg-gradient-to-b from-white to-blue-50 relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <p className="text-red-500">Erro ao carregar produtos. Tente novamente mais tarde.</p>
@@ -40,8 +40,14 @@ export default function ProductGrid() {
   }
 
   return (
-    <section id="products" className="py-20 lg:py-32 bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="products" className="py-20 lg:py-32 bg-gradient-to-b from-white to-blue-50 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-32 left-20 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-15 animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
+      </div>
+      
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
           <h3 className="text-3xl lg:text-4xl font-light apple-text-gray mb-4 tracking-tight">
             Produtos em <span className="font-semibold">destaque</span>

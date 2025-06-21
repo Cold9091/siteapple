@@ -7,8 +7,14 @@ export default function CallToAction() {
   };
 
   return (
-    <section className="py-20 apple-bg-light">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <section className="py-20 bg-gradient-to-b from-blue-50 to-blue-100 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-10 right-20 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-25 animate-pulse"></div>
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
+      </div>
+      
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <h3 className="text-3xl lg:text-4xl font-light apple-text-gray mb-6 tracking-tight">
           Tecnologia que <span className="font-semibold">inspira</span>
         </h3>

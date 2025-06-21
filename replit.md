@@ -91,6 +91,12 @@ Located in `shared/schema.ts`:
 ```
 Changelog:
 - June 21, 2025. Initial setup
+- June 21, 2025. Removed hero headphone image and applied global blue theme
+  * Removed product image from hero section
+  * Applied consistent blue gradient background across all sections
+  * Added animated background elements throughout the site
+  * Updated glassmorphism effects with blue tinting
+  * Maintained Apple-inspired design with cohesive color scheme
 ```
 
 ## User Preferences

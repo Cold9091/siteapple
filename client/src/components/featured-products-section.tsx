@@ -35,8 +35,15 @@ export default function FeaturedProductsSection() {
   const featuredProducts = allProducts?.filter(p => !p.featured).slice(0, 6) || [];
 
   return (
-    <section className="py-20 lg:py-32 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 lg:py-32 bg-gradient-to-b from-blue-50 via-blue-100 to-blue-50 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div className="absolute top-40 right-10 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-15 animate-pulse delay-1000"></div>
+        <div className="absolute -bottom-20 left-20 w-80 h-80 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-2000"></div>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
           <h3 className="text-3xl lg:text-4xl font-light apple-text-gray mb-4 tracking-tight">
             Mais <span className="font-semibold">Vendidos</span>

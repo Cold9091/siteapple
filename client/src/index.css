@@ -24,11 +24,15 @@
   --ring: hsl(29, 15%, 11%);
   --radius: 0.75rem;
   
-  /* Apple-inspired custom colors */
+  /* Apple-inspired custom colors with blue theme */
   --apple-gray: hsl(210, 10%, 12%);
   --apple-light: hsl(210, 20%, 97%);
   --apple-medium: hsl(210, 10%, 54%);
   --apple-blue: hsl(207, 90%, 54%);
+  --hero-blue-50: hsl(214, 100%, 97%);
+  --hero-blue-100: hsl(214, 95%, 93%);
+  --hero-blue-200: hsl(213, 97%, 87%);
+  --hero-blue-300: hsl(212, 96%, 78%);
 }
 
 .dark {
@@ -101,19 +105,19 @@
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-/* Glassmorphism effects */
+/* Glassmorphism effects with blue tint */
 .glass-card {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(214, 235, 255, 0.15);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  border: 1px solid rgba(214, 235, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(59, 130, 246, 0.15);
 }
 
 .glass-navbar {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(248, 250, 252, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(214, 235, 255, 0.3);
 }
 
 /* Floating animations */
