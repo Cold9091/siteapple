@@ -10,7 +10,8 @@ import {
   AlertCircle,
   CheckCircle2,
   Clock,
-  DollarSign
+  DollarSign,
+  Star
 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,13 +19,14 @@ import { Badge } from "@/components/ui/badge";
 import AdminProducts from "../components/admin/admin-products";
 import AdminOrders from "../components/admin/admin-orders";
 import AdminSettings from "../components/admin/admin-settings";
+import AdminFeatured from "../components/admin/admin-featured";
 import type { Order } from "@shared/schema";
 
 const sidebarItems = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "products", label: "Produtos", icon: Package },
+  { id: "featured", label: "Mais Vendidos", icon: Star },
   { id: "orders", label: "Pedidos", icon: ShoppingCart },
-  { id: "customers", label: "Clientes", icon: Users },
   { id: "settings", label: "Configurações", icon: SettingsIcon },
 ];
 
@@ -181,21 +183,8 @@ export default function AdminDashboard() {
         return <AdminProducts />;
       case "orders":
         return <AdminOrders />;
-      case "customers":
-        return (
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Gestão de Clientes</h1>
-              <p className="text-gray-600">Funcionalidade em desenvolvimento</p>
-            </div>
-            <Card>
-              <CardContent className="text-center py-12">
-                <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-500">Esta seção estará disponível em breve</p>
-              </CardContent>
-            </Card>
-          </div>
-        );
+      case "featured":
+        return <AdminFeatured />;
       case "settings":
         return <AdminSettings />;
       default:
