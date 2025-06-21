@@ -69,7 +69,17 @@ export default function FeaturedProductsSection() {
                     : 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
                 }}
               >
-                <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                {/* Background image filling entire container */}
+                <div className="absolute inset-0 opacity-30">
+                  <img 
+                    src={product.imageUrl} 
+                    alt={product.name}
+                    className="w-full h-full object-cover object-center"
+                  />
+                </div>
+                
+                {/* Gradient overlay for better text readability */}
+                <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-transparent to-black/60"></div>
                 
                 <div className="relative z-10 p-8 h-full flex flex-col justify-between text-white">
                   <div>
@@ -105,14 +115,6 @@ export default function FeaturedProductsSection() {
                       </Button>
                     </div>
                   </div>
-                </div>
-
-                <div className="absolute bottom-0 right-0 w-1/2 h-1/2 opacity-30">
-                  <img 
-                    src={product.imageUrl} 
-                    alt={product.name}
-                    className="w-full h-full object-cover object-center"
-                  />
                 </div>
 
                 {index === 0 && (
