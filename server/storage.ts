@@ -1,4 +1,4 @@
-import { users, products, type User, type InsertUser, type Product, type InsertProduct } from "@shared/schema";
+import { users, products, orders, type User, type InsertUser, type Product, type InsertProduct, type Order, type InsertOrder } from "@shared/schema";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -10,22 +10,38 @@ export interface IStorage {
   createProduct(product: InsertProduct): Promise<Product>;
   updateProduct(id: number, product: InsertProduct): Promise<Product | undefined>;
   deleteProduct(id: number): Promise<boolean>;
+  getOrders(): Promise<Order[]>;
+  getOrder(id: number): Promise<Order | undefined>;
+  createOrder(order: InsertOrder): Promise<Order>;
+  updateOrderStatus(id: number, status: string): Promise<Order | undefined>;
+  getDashboardStats(): Promise<{
+    totalProducts: number;
+    totalOrders: number;
+    pendingOrders: number;
+    totalRevenue: number;
+    recentOrders: Order[];
+  }>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private products: Map<number, Product>;
+  private orders: Map<number, Order>;
   private currentUserId: number;
   private currentProductId: number;
+  private currentOrderId: number;
 
   constructor() {
     this.users = new Map();
     this.products = new Map();
+    this.orders = new Map();
     this.currentUserId = 1;
     this.currentProductId = 1;
+    this.currentOrderId = 1;
     
-    // Initialize with sample products
+    // Initialize with sample data
     this.initializeProducts();
+    this.initializeOrders();
   }
 
   private initializeProducts() {
@@ -135,6 +151,121 @@ export class MemStorage implements IStorage {
 
   async deleteProduct(id: number): Promise<boolean> {
     return this.products.delete(id);
+  }
+
+  private initializeOrders() {
+    const sampleOrders: InsertOrder[] = [
+      {
+        customerName: "João Silva",
+        customerEmail: "joao.silva@email.com",
+        customerPhone: "+244 923 456 789",
+        items: [
+          { productId: 1, quantity: 1, price: 24825000, name: "AirSound Pro" }
+        ],
+        totalAmount: 24825000,
+        status: "delivered",
+        shippingAddress: "Rua da Missão, 123, Luanda, Angola"
+      },
+      {
+        customerName: "Maria Santos",
+        customerEmail: "maria.santos@email.com",
+        customerPhone: "+244 912 345 678",
+        items: [
+          { productId: 2, quantity: 1, price: 10725000, name: "ChargeFast Station" },
+          { productId: 4, quantity: 1, price: 16600000, name: "AirPods Pro 2" }
+        ],
+        totalAmount: 27325000,
+        status: "processing",
+        shippingAddress: "Av. Talatona, 456, Luanda, Angola"
+      },
+      {
+        customerName: "Carlos Mendes",
+        customerEmail: "carlos.mendes@email.com",
+        customerPhone: "+244 934 567 890",
+        items: [
+          { productId: 3, quantity: 1, price: 41500000, name: "TimeSync Elite" }
+        ],
+        totalAmount: 41500000,
+        status: "pending",
+        shippingAddress: "Rua Amílcar Cabral, 789, Benguela, Angola"
+      }
+    ];
+
+    sampleOrders.forEach(order => {
+      const id = this.currentOrderId++;
+      const fullOrder: Order = { 
+        ...order, 
+        id,
+        customerPhone: order.customerPhone || null,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      this.orders.set(id, fullOrder);
+    });
+  }
+
+  async getOrders(): Promise<Order[]> {
+    return Array.from(this.orders.values()).sort((a, b) => 
+      new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+    );
+  }
+
+  async getOrder(id: number): Promise<Order | undefined> {
+    return this.orders.get(id);
+  }
+
+  async createOrder(insertOrder: InsertOrder): Promise<Order> {
+    const id = this.currentOrderId++;
+    const order: Order = { 
+      ...insertOrder, 
+      id,
+      customerPhone: insertOrder.customerPhone || null,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.orders.set(id, order);
+    return order;
+  }
+
+  async updateOrderStatus(id: number, status: string): Promise<Order | undefined> {
+    const existingOrder = this.orders.get(id);
+    if (!existingOrder) {
+      return undefined;
+    }
+    const updatedOrder: Order = { 
+      ...existingOrder, 
+      status,
+      updatedAt: new Date()
+    };
+    this.orders.set(id, updatedOrder);
+    return updatedOrder;
+  }
+
+  async getDashboardStats(): Promise<{
+    totalProducts: number;
+    totalOrders: number;
+    pendingOrders: number;
+    totalRevenue: number;
+    recentOrders: Order[];
+  }> {
+    const allOrders = Array.from(this.orders.values());
+    const totalProducts = this.products.size;
+    const totalOrders = allOrders.length;
+    const pendingOrders = allOrders.filter(order => order.status === "pending").length;
+    const totalRevenue = allOrders
+      .filter(order => order.status === "delivered")
+      .reduce((sum, order) => sum + order.totalAmount, 0);
+    const recentOrders = allOrders
+      .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+      .slice(0, 5);
+
+    return {
+      totalProducts,
+      totalOrders,
+      pendingOrders,
+      totalRevenue,
+      recentOrders
+    };
   }
 }
 
