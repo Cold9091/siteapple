@@ -25,6 +25,8 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export const insertProductSchema = createInsertSchema(products).omit({
   id: true,
+}).extend({
+  category: z.enum(["Fones", "Carregadores", "Relógios", "Outros"]),
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
