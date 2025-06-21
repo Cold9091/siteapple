@@ -1,20 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/hooks/use-cart";
 import type { Product } from "@shared/schema";
 
 export default function FeaturedProductsSection() {
-  const { data: featuredProducts, isLoading, error } = useQuery<Product[]>({
-    queryKey: ['/api/products/featured'],
-  });
-  
-  const { data: allProducts } = useQuery<Product[]>({
+  const { data: allProducts, isLoading, error } = useQuery<Product[]>({
     queryKey: ['/api/products'],
   });
-  
   const { addToCart } = useCart();
   const { toast } = useToast();
 
@@ -37,120 +31,101 @@ export default function FeaturedProductsSection() {
     return null;
   }
 
+  // Get the first 6 non-featured products for this section
+  const featuredProducts = allProducts?.filter(p => !p.featured).slice(0, 6) || [];
+
   return (
     <section className="py-20 lg:py-32 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Seção Produtos em Destaque */}
         <div className="text-center mb-16">
           <h3 className="text-3xl lg:text-4xl font-light apple-text-gray mb-4 tracking-tight">
-            Produtos em <span className="font-semibold">destaque</span>
+            Mais <span className="font-semibold">Vendidos</span>
           </h3>
           <p className="text-lg apple-text-medium max-w-2xl mx-auto">
-            Uma seleção dos nossos produtos mais populares, cada um projetado para elevar
-            sua experiência digital.
+            Descubra os produtos mais procurados pelos nossos clientes em toda Angola.
           </p>
         </div>
 
-        {/* Carrossel de Produtos em Destaque */}
-        <div className="mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading ? (
-            <div className="flex gap-6 overflow-hidden">
-              {Array.from({ length: 3 }).map((_, index) => (
-                <div key={index} className="flex-none w-full sm:w-80 md:w-96">
-                  <Skeleton className="w-full h-80 rounded-2xl" />
-                </div>
-              ))}
-            </div>
-          ) : featuredProducts && featuredProducts.length > 0 ? (
-            <Carousel
-              opts={{
-                align: "start",
-                loop: true,
-              }}
-              className="w-full"
-            >
-              <CarouselContent className="-ml-2 md:-ml-4">
-                {featuredProducts.map((product, index) => (
-                  <CarouselItem key={product.id} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
-                    <div 
-                      className="relative group overflow-hidden rounded-2xl h-80 transition-all duration-700 hover:scale-105 cursor-pointer"
-                      style={{ 
-                        background: index % 3 === 0 
-                          ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' 
-                          : index % 3 === 1 
-                          ? 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
-                          : 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
-                      }}
-                    >
-                      <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-                      
-                      <div className="relative z-10 p-6 h-full flex flex-col justify-between text-white">
-                        <div>
-                          <h4 className="text-xl font-semibold mb-2">
-                            {product.name}
-                          </h4>
-                          <p className="text-sm text-white/90 mb-4 line-clamp-3">
-                            {product.description}
-                          </p>
-                        </div>
-
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-lg font-bold">
-                              {formatPrice(product.price)}
-                            </p>
-                          </div>
-                          
-                          <div className="flex space-x-2">
-                            <Button
-                              onClick={() => handlePurchase(product)}
-                              size="sm"
-                              className="bg-white/20 hover:bg-white/30 text-white border border-white/30 backdrop-blur-sm rounded-full"
-                            >
-                              Comprar
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="border-white/30 hover:bg-white hover:text-gray-900 rounded-full text-white"
-                            >
-                              Ver mais
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="absolute bottom-0 right-0 w-1/2 h-1/2 opacity-30">
-                        <img 
-                          src={product.imageUrl} 
-                          alt={product.name}
-                          className="w-full h-full object-cover object-center"
-                          onError={(e) => {
-                            e.currentTarget.src = "https://via.placeholder.com/200x200?text=Produto";
-                          }}
-                        />
-                      </div>
-
-                      {index === 0 && (
-                        <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
-                          <span className="text-white text-sm font-medium">Mais Vendido</span>
-                        </div>
-                      )}
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="hidden sm:flex -left-12 lg:-left-16" />
-              <CarouselNext className="hidden sm:flex -right-12 lg:-right-16" />
-            </Carousel>
+            Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className="relative group">
+                <Skeleton className="w-full h-80 rounded-2xl" />
+              </div>
+            ))
           ) : (
-            <div className="text-center py-12 text-gray-500">
-              <p>Nenhum produto em destaque encontrado.</p>
-            </div>
+            featuredProducts.map((product, index) => (
+              <div 
+                key={product.id}
+                className={`relative group overflow-hidden rounded-2xl transition-all duration-700 hover:scale-105 cursor-pointer ${
+                  index === 0 ? 'md:col-span-2 md:row-span-2 h-96 md:h-full' : 'h-80'
+                }`}
+                style={{ 
+                  animationDelay: `${index * 150}ms`,
+                  background: index % 2 === 0 
+                    ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' 
+                    : index % 3 === 0 
+                    ? 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+                    : 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+                }}
+              >
+                <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                
+                <div className="relative z-10 p-8 h-full flex flex-col justify-between text-white">
+                  <div>
+                    <h4 className={`font-semibold mb-2 ${index === 0 ? 'text-3xl lg:text-4xl' : 'text-xl'}`}>
+                      {product.name}
+                    </h4>
+                    <p className={`mb-4 ${index === 0 ? 'text-lg' : 'text-sm'} text-white/90`}>
+                      {product.description}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className={`font-bold ${index === 0 ? 'text-2xl' : 'text-lg'}`}>
+                        {formatPrice(product.price)}
+                      </p>
+                    </div>
+                    
+                    <div className="flex space-x-3">
+                      <Button
+                        onClick={() => handlePurchase(product)}
+                        size={index === 0 ? "default" : "sm"}
+                        className="bg-white/20 hover:bg-white/30 text-white border border-white/30 backdrop-blur-sm rounded-full"
+                      >
+                        Comprar
+                      </Button>
+                      <Button
+                        size={index === 0 ? "default" : "sm"}
+                        variant="outline"
+                        className="border-white/30 hover:bg-white hover:text-gray-900 rounded-full text-[#000000]"
+                      >
+                        Ver mais
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="absolute bottom-0 right-0 w-1/2 h-1/2 opacity-30">
+                  <img 
+                    src={product.imageUrl} 
+                    alt={product.name}
+                    className="w-full h-full object-cover object-center"
+                  />
+                </div>
+
+                {index === 0 && (
+                  <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                    <span className="text-white text-sm font-medium">Mais Vendido</span>
+                  </div>
+                )}
+              </div>
+            ))
           )}
         </div>
 
-        {/* Todos os Produtos em Grid */}
+        {/* All Products Grid */}
         <div className="mt-20">
           <div className="text-center mb-12">
             <h3 className="text-2xl lg:text-3xl font-light apple-text-gray mb-4 tracking-tight">
@@ -180,9 +155,6 @@ export default function FeaturedProductsSection() {
                       src={product.imageUrl} 
                       alt={product.name}
                       className="w-full h-48 object-cover object-center rounded-lg"
-                      onError={(e) => {
-                        e.currentTarget.src = "https://via.placeholder.com/200x200?text=Produto";
-                      }}
                     />
                   </div>
                   <div className="text-center">
