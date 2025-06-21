@@ -39,7 +39,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export const insertProductSchema = createInsertSchema(products).omit({
   id: true,
 }).extend({
-  category: z.enum(["Fones", "Carregadores", "Relógios", "Outros"]),
+  category: z.enum(["iPhone", "Mac", "iPad", "Watch", "AirPods", "Fones", "Carregadores", "Relógios", "Outros"]),
 });
 
 export const insertOrderSchema = createInsertSchema(orders).omit({

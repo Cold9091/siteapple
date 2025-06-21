@@ -15,12 +15,16 @@ export default function Navigation() {
   const [isSupportHovered, setIsSupportHovered] = useState(false);
 
   const categories = [
+    'Store',
+    'Mac',
+    'iPad',
     'iPhone',
-    'Samsung', 
-    'Fones',
-    'Smartwatches',
-    'Computadores',
-    'Jogos'
+    'Watch',
+    'Vision',
+    'AirPods',
+    'TV & Home',
+    'Entertainment',
+    'Accessories'
   ];
 
   const handleCategoryHover = (category: string) => {
@@ -60,13 +64,24 @@ export default function Navigation() {
             {/* Menu Central */}
             <div className="hidden md:flex items-center space-x-8">
               {categories.map((category) => (
-                <button
-                  key={category}
-                  onMouseEnter={() => handleCategoryHover(category)}
-                  className="apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal py-2"
-                >
-                  {category}
-                </button>
+                category === 'iPhone' ? (
+                  <Link key={category} href="/iphone">
+                    <button
+                      onMouseEnter={() => handleCategoryHover(category)}
+                      className="apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal py-2"
+                    >
+                      {category}
+                    </button>
+                  </Link>
+                ) : (
+                  <button
+                    key={category}
+                    onMouseEnter={() => handleCategoryHover(category)}
+                    className="apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal py-2"
+                  >
+                    {category}
+                  </button>
+                )
               ))}
               <button 
                 onMouseEnter={handleSupportHover}

@@ -45,7 +45,7 @@ export class MemStorage implements IStorage {
   }
 
   private initializeProducts() {
-    const sampleProducts: InsertProduct[] = [
+    const sampleProducts: any[] = [
       {
         name: "AirSound Pro",
         description: "Fones de ouvido wireless com cancelamento de ruído ativo e qualidade de áudio excepcional.",
@@ -69,6 +69,38 @@ export class MemStorage implements IStorage {
         imageUrl: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
         category: "Relógios",
         featured: true,
+      },
+      {
+        name: "iPhone 16 Pro",
+        description: "O iPhone mais avançado já criado. Com chip A18 Pro, sistema de câmera Pro e design em titânio.",
+        price: 132490000, // 1.324.900 AOA
+        imageUrl: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+        category: "iPhone",
+        featured: true,
+      },
+      {
+        name: "iPhone 16",
+        description: "Potente, bonito e construído para durar. Com chip A18 e novas funcionalidades de câmera.",
+        price: 99900000, // 999.000 AOA
+        imageUrl: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+        category: "iPhone",
+        featured: true,
+      },
+      {
+        name: "iPhone 15",
+        description: "iPhone com Dynamic Island, câmera Principal de 48 MP e USB-C.",
+        price: 82990000, // 829.900 AOA
+        imageUrl: "https://images.unsplash.com/photo-1556656793-08538906a9f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+        category: "iPhone",
+        featured: false,
+      },
+      {
+        name: "iPhone 14",
+        description: "iPhone com sistema de câmera dupla avançado e recursos de segurança inovadores.",
+        price: 66490000, // 664.900 AOA
+        imageUrl: "https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+        category: "iPhone",
+        featured: false,
       },
       {
         name: "AirPods Pro 2",
