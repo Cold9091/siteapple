@@ -292,3 +292,21 @@
 .animate-loading-spin {
   animation: loading-spin 2s linear infinite;
 }
+
+/* Infinite scroll animation for testimonials */
+@keyframes infinite-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-infinite-scroll {
+  animation: infinite-scroll 20s linear infinite;
+}
+
+.animate-infinite-scroll:hover {
+  animation-play-state: paused;
+}

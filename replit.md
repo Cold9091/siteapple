@@ -107,6 +107,11 @@ Changelog:
   * Implemented SVG-based circular progress indicator with gradient colors
   * Added smooth completion animation with expanding rings effect
   * Integrated seamless transition from loading screen to main application
+- June 22, 2025. Created animated testimonials section with infinite carousel
+  * Added testimonials section below "Tecnologia que inspira" 
+  * Implemented infinite horizontal scrolling carousel with 5 customer testimonials
+  * Created smooth continuous animation that pauses on hover
+  * Included authentic customer data from various Angolan locations
 ```
 
 ## User Preferences
