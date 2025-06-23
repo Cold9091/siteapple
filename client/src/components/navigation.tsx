@@ -93,12 +93,6 @@ export default function Navigation() {
                   </button>
                 )
               ))}
-              <button 
-                onMouseEnter={handleSupportHover}
-                className="menu-item apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal py-2 focus-micro"
-              >
-                Suporte
-              </button>
             </div>
 
             {/* Ícones direita */}
