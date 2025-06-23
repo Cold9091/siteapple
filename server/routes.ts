@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertProductSchema, insertOrderSchema } from "@shared/schema";
+import { insertProductSchema, insertOrderSchema, insertCategorySchema, insertSubcategorySchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Get all products
@@ -171,6 +171,181 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(stats);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch dashboard stats" });
+    }
+  });
+
+  // Categories routes
+  app.get("/api/categories", async (req, res) => {
+    try {
+      const categories = await storage.getCategories();
+      res.json(categories);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch categories" });
+    }
+  });
+
+  app.get("/api/categories/with-subcategories", async (req, res) => {
+    try {
+      const categoriesWithSubs = await storage.getCategoriesWithSubcategories();
+      res.json(categoriesWithSubs);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch categories with subcategories" });
+    }
+  });
+
+  app.get("/api/categories/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid category ID" });
+      }
+      
+      const category = await storage.getCategory(id);
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      
+      res.json(category);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch category" });
+    }
+  });
+
+  app.post("/api/categories", async (req, res) => {
+    try {
+      const validatedData = insertCategorySchema.parse(req.body);
+      const category = await storage.createCategory(validatedData);
+      res.status(201).json(category);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to create category" });
+    }
+  });
+
+  app.put("/api/categories/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid category ID" });
+      }
+
+      const validatedData = insertCategorySchema.parse(req.body);
+      const category = await storage.updateCategory(id, validatedData);
+      
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      
+      res.json(category);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update category" });
+    }
+  });
+
+  app.delete("/api/categories/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid category ID" });
+      }
+
+      const success = await storage.deleteCategory(id);
+      if (!success) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      
+      res.json({ message: "Category deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete category" });
+    }
+  });
+
+  // Subcategories routes
+  app.get("/api/subcategories", async (req, res) => {
+    try {
+      const subcategories = await storage.getSubcategories();
+      res.json(subcategories);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch subcategories" });
+    }
+  });
+
+  app.get("/api/categories/:categoryId/subcategories", async (req, res) => {
+    try {
+      const categoryId = parseInt(req.params.categoryId);
+      if (isNaN(categoryId)) {
+        return res.status(400).json({ message: "Invalid category ID" });
+      }
+      
+      const subcategories = await storage.getSubcategoriesByCategory(categoryId);
+      res.json(subcategories);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch subcategories" });
+    }
+  });
+
+  app.get("/api/subcategories/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid subcategory ID" });
+      }
+      
+      const subcategory = await storage.getSubcategory(id);
+      if (!subcategory) {
+        return res.status(404).json({ message: "Subcategory not found" });
+      }
+      
+      res.json(subcategory);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch subcategory" });
+    }
+  });
+
+  app.post("/api/subcategories", async (req, res) => {
+    try {
+      const validatedData = insertSubcategorySchema.parse(req.body);
+      const subcategory = await storage.createSubcategory(validatedData);
+      res.status(201).json(subcategory);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to create subcategory" });
+    }
+  });
+
+  app.put("/api/subcategories/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid subcategory ID" });
+      }
+
+      const validatedData = insertSubcategorySchema.parse(req.body);
+      const subcategory = await storage.updateSubcategory(id, validatedData);
+      
+      if (!subcategory) {
+        return res.status(404).json({ message: "Subcategory not found" });
+      }
+      
+      res.json(subcategory);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update subcategory" });
+    }
+  });
+
+  app.delete("/api/subcategories/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid subcategory ID" });
+      }
+
+      const success = await storage.deleteSubcategory(id);
+      if (!success) {
+        return res.status(404).json({ message: "Subcategory not found" });
+      }
+      
+      res.json({ message: "Subcategory deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete subcategory" });
     }
   });
 

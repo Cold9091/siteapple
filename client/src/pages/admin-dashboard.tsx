@@ -20,12 +20,15 @@ import AdminProducts from "../components/admin/admin-products";
 import AdminOrders from "../components/admin/admin-orders";
 import AdminSettings from "../components/admin/admin-settings";
 import AdminFeatured from "../components/admin/admin-featured";
+import AdminCategories from "../components/admin/admin-categories";
 import type { Order } from "@shared/schema";
+import { Folder } from "lucide-react";
 
 const sidebarItems = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "products", label: "Produtos", icon: Package },
   { id: "featured", label: "Mais Vendidos", icon: Star },
+  { id: "categories", label: "Categorias", icon: Folder },
   { id: "orders", label: "Pedidos", icon: ShoppingCart },
   { id: "settings", label: "Configurações", icon: SettingsIcon },
 ];
@@ -185,6 +188,8 @@ export default function AdminDashboard() {
         return <AdminOrders />;
       case "featured":
         return <AdminFeatured />;
+      case "categories":
+        return <AdminCategories />;
       case "settings":
         return <AdminSettings />;
       default:

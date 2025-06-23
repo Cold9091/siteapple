@@ -1,4 +1,4 @@
-import { users, products, orders, type User, type InsertUser, type Product, type InsertProduct, type Order, type InsertOrder } from "@shared/schema";
+import { users, products, orders, categories, subcategories, type User, type InsertUser, type Product, type InsertProduct, type Order, type InsertOrder, type Category, type InsertCategory, type Subcategory, type InsertSubcategory } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 
@@ -16,6 +16,18 @@ export interface IStorage {
   getOrder(id: number): Promise<Order | undefined>;
   createOrder(order: InsertOrder): Promise<Order>;
   updateOrderStatus(id: number, status: string): Promise<Order | undefined>;
+  getCategories(): Promise<Category[]>;
+  getCategory(id: number): Promise<Category | undefined>;
+  createCategory(category: InsertCategory): Promise<Category>;
+  updateCategory(id: number, category: InsertCategory): Promise<Category | undefined>;
+  deleteCategory(id: number): Promise<boolean>;
+  getSubcategories(): Promise<Subcategory[]>;
+  getSubcategoriesByCategory(categoryId: number): Promise<Subcategory[]>;
+  getSubcategory(id: number): Promise<Subcategory | undefined>;
+  createSubcategory(subcategory: InsertSubcategory): Promise<Subcategory>;
+  updateSubcategory(id: number, subcategory: InsertSubcategory): Promise<Subcategory | undefined>;
+  deleteSubcategory(id: number): Promise<boolean>;
+  getCategoriesWithSubcategories(): Promise<(Category & { subcategories: Subcategory[] })[]>;
   getDashboardStats(): Promise<{
     totalProducts: number;
     totalOrders: number;
@@ -294,6 +306,54 @@ export class MemStorage implements IStorage {
       recentOrders
     };
   }
+
+  async getCategories(): Promise<Category[]> {
+    return [];
+  }
+
+  async getCategory(id: number): Promise<Category | undefined> {
+    return undefined;
+  }
+
+  async createCategory(category: InsertCategory): Promise<Category> {
+    throw new Error("MemStorage does not support categories");
+  }
+
+  async updateCategory(id: number, category: InsertCategory): Promise<Category | undefined> {
+    return undefined;
+  }
+
+  async deleteCategory(id: number): Promise<boolean> {
+    return false;
+  }
+
+  async getSubcategories(): Promise<Subcategory[]> {
+    return [];
+  }
+
+  async getSubcategoriesByCategory(categoryId: number): Promise<Subcategory[]> {
+    return [];
+  }
+
+  async getSubcategory(id: number): Promise<Subcategory | undefined> {
+    return undefined;
+  }
+
+  async createSubcategory(subcategory: InsertSubcategory): Promise<Subcategory> {
+    throw new Error("MemStorage does not support subcategories");
+  }
+
+  async updateSubcategory(id: number, subcategory: InsertSubcategory): Promise<Subcategory | undefined> {
+    return undefined;
+  }
+
+  async deleteSubcategory(id: number): Promise<boolean> {
+    return false;
+  }
+
+  async getCategoriesWithSubcategories(): Promise<(Category & { subcategories: Subcategory[] })[]> {
+    return [];
+  }
 }
 
 export class SQLiteStorage implements IStorage {
@@ -364,6 +424,74 @@ export class SQLiteStorage implements IStorage {
       updatedAt: new Date() 
     }).where(eq(orders.id, id)).returning();
     return result[0];
+  }
+
+  async getCategories(): Promise<Category[]> {
+    return await db.select().from(categories).orderBy(categories.sortOrder);
+  }
+
+  async getCategory(id: number): Promise<Category | undefined> {
+    const result = await db.select().from(categories).where(eq(categories.id, id)).limit(1);
+    return result[0];
+  }
+
+  async createCategory(insertCategory: InsertCategory): Promise<Category> {
+    const result = await db.insert(categories).values(insertCategory).returning();
+    return result[0];
+  }
+
+  async updateCategory(id: number, insertCategory: InsertCategory): Promise<Category | undefined> {
+    const result = await db.update(categories).set({
+      ...insertCategory,
+      updatedAt: new Date()
+    }).where(eq(categories.id, id)).returning();
+    return result[0];
+  }
+
+  async deleteCategory(id: number): Promise<boolean> {
+    const result = await db.delete(categories).where(eq(categories.id, id));
+    return result.changes > 0;
+  }
+
+  async getSubcategories(): Promise<Subcategory[]> {
+    return await db.select().from(subcategories).orderBy(subcategories.sortOrder);
+  }
+
+  async getSubcategoriesByCategory(categoryId: number): Promise<Subcategory[]> {
+    return await db.select().from(subcategories).where(eq(subcategories.categoryId, categoryId)).orderBy(subcategories.sortOrder);
+  }
+
+  async getSubcategory(id: number): Promise<Subcategory | undefined> {
+    const result = await db.select().from(subcategories).where(eq(subcategories.id, id)).limit(1);
+    return result[0];
+  }
+
+  async createSubcategory(insertSubcategory: InsertSubcategory): Promise<Subcategory> {
+    const result = await db.insert(subcategories).values(insertSubcategory).returning();
+    return result[0];
+  }
+
+  async updateSubcategory(id: number, insertSubcategory: InsertSubcategory): Promise<Subcategory | undefined> {
+    const result = await db.update(subcategories).set({
+      ...insertSubcategory,
+      updatedAt: new Date()
+    }).where(eq(subcategories.id, id)).returning();
+    return result[0];
+  }
+
+  async deleteSubcategory(id: number): Promise<boolean> {
+    const result = await db.delete(subcategories).where(eq(subcategories.id, id));
+    return result.changes > 0;
+  }
+
+  async getCategoriesWithSubcategories(): Promise<(Category & { subcategories: Subcategory[] })[]> {
+    const allCategories = await this.getCategories();
+    const allSubcategories = await this.getSubcategories();
+    
+    return allCategories.map(category => ({
+      ...category,
+      subcategories: allSubcategories.filter(sub => sub.categoryId === category.id)
+    }));
   }
 
   async getDashboardStats(): Promise<{
@@ -438,6 +566,121 @@ export class SQLiteStorageWithInit extends SQLiteStorage {
 
       for (const product of sampleProducts) {
         await this.createProduct(product);
+      }
+    }
+
+    // Check if we have categories already
+    const existingCategories = await db.select().from(categories);
+    
+    if (existingCategories.length === 0) {
+      // Add sample categories and subcategories
+      const sampleCategories = [
+        {
+          name: "iPhone",
+          slug: "iphone",
+          description: "Smartphones e acessórios iPhone",
+          isActive: true,
+          sortOrder: 1,
+        },
+        {
+          name: "Mac",
+          slug: "mac",
+          description: "Computadores e laptops Mac",
+          isActive: true,
+          sortOrder: 2,
+        },
+        {
+          name: "iPad",
+          slug: "ipad",
+          description: "Tablets iPad e acessórios",
+          isActive: true,
+          sortOrder: 3,
+        },
+        {
+          name: "Watch",
+          slug: "watch",
+          description: "Apple Watch e acessórios",
+          isActive: true,
+          sortOrder: 4,
+        },
+        {
+          name: "AirPods",
+          slug: "airpods",
+          description: "Fones de ouvido sem fio",
+          isActive: true,
+          sortOrder: 5,
+        },
+        {
+          name: "Acessórios",
+          slug: "acessorios",
+          description: "Acessórios diversos",
+          isActive: true,
+          sortOrder: 6,
+        },
+      ];
+
+      for (const category of sampleCategories) {
+        const createdCategory = await this.createCategory(category);
+        
+        // Add subcategories for each category
+        let subcategories: any[] = [];
+        
+        switch (category.slug) {
+          case "iphone":
+            subcategories = [
+              { name: "iPhone 15", slug: "iphone-15", categoryId: createdCategory.id, sortOrder: 1 },
+              { name: "iPhone 14", slug: "iphone-14", categoryId: createdCategory.id, sortOrder: 2 },
+              { name: "iPhone 13", slug: "iphone-13", categoryId: createdCategory.id, sortOrder: 3 },
+              { name: "Capas", slug: "capas-iphone", categoryId: createdCategory.id, sortOrder: 4 },
+            ];
+            break;
+          case "mac":
+            subcategories = [
+              { name: "MacBook Air", slug: "macbook-air", categoryId: createdCategory.id, sortOrder: 1 },
+              { name: "MacBook Pro", slug: "macbook-pro", categoryId: createdCategory.id, sortOrder: 2 },
+              { name: "iMac", slug: "imac", categoryId: createdCategory.id, sortOrder: 3 },
+              { name: "Mac mini", slug: "mac-mini", categoryId: createdCategory.id, sortOrder: 4 },
+            ];
+            break;
+          case "ipad":
+            subcategories = [
+              { name: "iPad Pro", slug: "ipad-pro", categoryId: createdCategory.id, sortOrder: 1 },
+              { name: "iPad Air", slug: "ipad-air", categoryId: createdCategory.id, sortOrder: 2 },
+              { name: "iPad", slug: "ipad-standard", categoryId: createdCategory.id, sortOrder: 3 },
+              { name: "iPad mini", slug: "ipad-mini", categoryId: createdCategory.id, sortOrder: 4 },
+            ];
+            break;
+          case "watch":
+            subcategories = [
+              { name: "Apple Watch Series 9", slug: "watch-series-9", categoryId: createdCategory.id, sortOrder: 1 },
+              { name: "Apple Watch SE", slug: "watch-se", categoryId: createdCategory.id, sortOrder: 2 },
+              { name: "Pulseiras", slug: "pulseiras", categoryId: createdCategory.id, sortOrder: 3 },
+            ];
+            break;
+          case "airpods":
+            subcategories = [
+              { name: "AirPods Pro", slug: "airpods-pro", categoryId: createdCategory.id, sortOrder: 1 },
+              { name: "AirPods (3ª geração)", slug: "airpods-3", categoryId: createdCategory.id, sortOrder: 2 },
+              { name: "AirPods Max", slug: "airpods-max", categoryId: createdCategory.id, sortOrder: 3 },
+            ];
+            break;
+          case "acessorios":
+            subcategories = [
+              { name: "Carregadores", slug: "carregadores", categoryId: createdCategory.id, sortOrder: 1 },
+              { name: "Cabos", slug: "cabos", categoryId: createdCategory.id, sortOrder: 2 },
+              { name: "Suportes", slug: "suportes", categoryId: createdCategory.id, sortOrder: 3 },
+              { name: "Outros", slug: "outros", categoryId: createdCategory.id, sortOrder: 4 },
+            ];
+            break;
+        }
+
+        for (const subcategory of subcategories) {
+          await this.createSubcategory({
+            ...subcategory,
+            description: "",
+            isActive: true,
+          });
+        }
       }
     }
 
