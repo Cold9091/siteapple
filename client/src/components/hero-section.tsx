@@ -109,20 +109,7 @@ export default function HeroSection() {
 
 
 
-          {/* Product indicators */}
-          <div className={`flex justify-center space-x-3 mb-8 transition-all duration-1000 delay-800 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            {products.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => handleProductChange(index)}
-                className={`h-2 rounded-full transition-all duration-500 cursor-pointer hover:scale-110 ${
-                  index === currentProductIndex 
-                    ? 'bg-blue-600 w-8' 
-                    : 'bg-gray-300 hover:bg-gray-400 w-2'
-                }`}
-              />
-            ))}
-          </div>
+
 
           <div className={`mt-8 text-center transition-all duration-1000 delay-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <p className="text-lg font-medium mb-2">
