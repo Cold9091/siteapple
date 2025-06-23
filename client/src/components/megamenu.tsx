@@ -270,7 +270,7 @@ export default function MegaMenu({ activeCategory, onClose }: MegaMenuProps) {
             <ul>
               {section.items.map((item, itemIndex) => (
                 <li key={itemIndex}>
-                  <a href="#" onClick={(e) => e.preventDefault()}>
+                  <a href="#" onClick={(e) => e.preventDefault()} className="menu-item-micro">
                     {item}
                   </a>
                 </li>

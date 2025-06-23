@@ -68,7 +68,7 @@ export default function Navigation() {
                   <Link key={category} href="/iphone">
                     <button
                       onMouseEnter={() => handleCategoryHover(category)}
-                      className="apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal py-2"
+                      className="menu-item apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal py-2 focus-micro"
                     >
                       {category}
                     </button>
@@ -77,7 +77,7 @@ export default function Navigation() {
                   <button
                     key={category}
                     onMouseEnter={() => handleCategoryHover(category)}
-                    className="apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal py-2"
+                    className="menu-item apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal py-2 focus-micro"
                   >
                     {category}
                   </button>
@@ -85,7 +85,7 @@ export default function Navigation() {
               ))}
               <button 
                 onMouseEnter={handleSupportHover}
-                className="apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal py-2"
+                className="menu-item apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal py-2 focus-micro"
               >
                 Suporte
               </button>
@@ -95,20 +95,20 @@ export default function Navigation() {
             <div className="flex items-center space-x-4">
               <button 
                 onClick={() => setIsSearchOpen(true)}
-                className="apple-text-medium hover:apple-text-gray apple-transition"
+                className="apple-text-medium hover:apple-text-gray apple-transition icon-micro focus-micro p-2 rounded-full"
               >
                 <Search size={18} />
               </button>
               <Link href="/admin">
-                <button className="apple-text-medium hover:apple-text-gray apple-transition">
+                <button className="apple-text-medium hover:apple-text-gray apple-transition icon-micro focus-micro p-2 rounded-full">
                   <Settings size={18} />
                 </button>
               </Link>
               <CartSidebar>
-                <button className="apple-text-medium hover:apple-text-gray apple-transition relative">
+                <button className="apple-text-medium hover:apple-text-gray apple-transition icon-micro focus-micro relative p-2 rounded-full">
                   <ShoppingBag size={18} />
                   {totalItems > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
                       {totalItems}
                     </span>
                   )}

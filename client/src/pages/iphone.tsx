@@ -54,7 +54,7 @@ export default function IPhonePage() {
           <div className="flex items-center justify-center space-x-8 py-4 overflow-x-auto">
             {iPhoneModels.map((model, index) => (
               <div key={index} className="flex flex-col items-center min-w-[80px] group cursor-pointer">
-                <div className="w-16 h-20 bg-gray-100 rounded-lg mb-2 flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                <div className="card-micro w-16 h-20 bg-gray-100 rounded-lg mb-2 flex items-center justify-center group-hover:bg-gray-200 transition-colors">
                   <div className="w-8 h-12 bg-gray-300 rounded-sm"></div>
                 </div>
                 <span className="text-xs font-medium text-gray-900 text-center leading-tight">
@@ -137,7 +137,7 @@ export default function IPhonePage() {
               iPhoneProducts?.map((product, index) => (
                 <div 
                   key={product.id}
-                  className="group bg-white rounded-2xl p-6 hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  className="card-micro group bg-white rounded-2xl p-6"
                 >
                   <div className="aspect-square bg-gray-50 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
                     <img 
@@ -158,7 +158,7 @@ export default function IPhonePage() {
                     </p>
                     <Button
                       onClick={() => handlePurchase(product)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6"
+                      className="btn-micro bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 focus-micro"
                     >
                       Comprar
                     </Button>

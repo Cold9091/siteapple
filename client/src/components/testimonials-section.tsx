@@ -67,7 +67,7 @@ export default function TestimonialsSection() {
             {[...testimonials, ...testimonials].map((testimonial, index) => (
               <div
                 key={`${testimonial.id}-${index}`}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105 min-w-[350px] flex-shrink-0"
+                className="card-micro bg-white rounded-2xl p-8 shadow-lg min-w-[350px] flex-shrink-0"
               >
                 {/* Quote icon */}
                 <div className="mb-6">

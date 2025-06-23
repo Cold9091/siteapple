@@ -64,7 +64,7 @@ export default function FeaturedProductsSection() {
             featuredProducts.map((product, index) => (
               <div 
                 key={product.id}
-                className={`relative group overflow-hidden rounded-2xl transition-all duration-700 hover:scale-105 cursor-pointer ${
+                className={`card-micro relative group overflow-hidden rounded-2xl cursor-pointer ${
                   index === 0 ? 'md:col-span-2 md:row-span-2 h-96 md:h-full' : 'h-80'
                 }`}
                 style={{ 
@@ -109,14 +109,14 @@ export default function FeaturedProductsSection() {
                       <Button
                         onClick={() => handlePurchase(product)}
                         size={index === 0 ? "default" : "sm"}
-                        className="bg-white/20 hover:bg-white/30 text-white border border-white/30 backdrop-blur-sm rounded-full"
+                        className="btn-micro bg-white/20 hover:bg-white/30 text-white border border-white/30 backdrop-blur-sm rounded-full focus-micro"
                       >
                         Comprar
                       </Button>
                       <Button
                         size={index === 0 ? "default" : "sm"}
                         variant="outline"
-                        className="border-white/30 hover:bg-white hover:text-gray-900 rounded-full text-[#000000]"
+                        className="btn-micro border-white/30 hover:bg-white hover:text-gray-900 rounded-full text-[#000000] focus-micro"
                       >
                         Ver mais
                       </Button>
@@ -159,7 +159,7 @@ export default function FeaturedProductsSection() {
                   className={`group transition-all duration-700 ${isLoading ? 'opacity-0 translate-y-8' : 'opacity-100 translate-y-0'}`}
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <div className="glass-card rounded-xl p-4 mb-4 apple-transition hover:shadow-xl hover:scale-105">
+                  <div className="card-micro glass-card rounded-xl p-4 mb-4">
                     <img 
                       src={product.imageUrl} 
                       alt={product.name}
@@ -179,7 +179,7 @@ export default function FeaturedProductsSection() {
                     <Button
                       onClick={() => handlePurchase(product)}
                       size="sm"
-                      className="bg-[hsl(207,90%,54%)] hover:bg-[hsl(207,90%,48%)] text-white rounded-full font-medium apple-transition hover:scale-105 w-full"
+                      className="btn-micro bg-[hsl(207,90%,54%)] hover:bg-[hsl(207,90%,48%)] text-white rounded-full font-medium focus-micro w-full"
                     >
                       Comprar
                     </Button>

@@ -94,14 +94,14 @@ export default function HeroSection() {
           <div className={`flex justify-center space-x-6 mb-16 transition-all duration-1000 delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <Button
               onClick={handleLearnMore}
-              className="bg-[hsl(207,90%,54%)] hover:bg-[hsl(207,90%,48%)] text-white px-8 py-3 rounded-full font-medium apple-transition hover:shadow-lg hover:scale-105 pulse-glow"
+              className="btn-micro btn-micro-primary bg-[hsl(207,90%,54%)] hover:bg-[hsl(207,90%,48%)] text-white px-8 py-3 rounded-full font-medium focus-micro"
             >
               Saiba mais
             </Button>
             <Button
               onClick={handleBuy}
               variant="outline"
-              className="glass-card border-white/30 text-[hsl(207,90%,54%)] hover:bg-[hsl(207,90%,54%)] hover:text-white px-8 py-3 rounded-full font-medium apple-transition hover:scale-105"
+              className="btn-micro glass-card border-white/30 text-[hsl(207,90%,54%)] hover:bg-[hsl(207,90%,54%)] hover:text-white px-8 py-3 rounded-full font-medium focus-micro"
             >
               Comprar
             </Button>

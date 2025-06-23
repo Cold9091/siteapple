@@ -24,7 +24,7 @@ export default function CallToAction() {
         </p>
         <Button
           onClick={handleExplore}
-          className="bg-[hsl(210,10%,12%)] hover:bg-[hsl(210,10%,8%)] text-white px-10 py-4 rounded-full font-medium apple-transition hover:shadow-lg hover:scale-105"
+          className="btn-micro btn-micro-primary bg-[hsl(210,10%,12%)] hover:bg-[hsl(210,10%,8%)] text-white px-10 py-4 rounded-full font-medium focus-micro"
         >
           Explorar catálogo completo
         </Button>

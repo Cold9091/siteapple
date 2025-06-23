@@ -72,7 +72,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
             />
             <button 
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className="icon-micro p-2 hover:bg-gray-100 rounded-full focus-micro"
             >
               <X size={20} />
             </button>
@@ -89,7 +89,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                   {items.map((item, index) => (
                     <button
                       key={index}
-                      className="flex items-center w-full p-3 hover:bg-gray-50 rounded-lg text-left transition-colors group"
+                      className="menu-item-micro flex items-center w-full p-3 hover:bg-gray-50 rounded-lg text-left group focus-micro"
                       onClick={() => {
                         // Handle search result click
                         console.log('Search for:', item);
