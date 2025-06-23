@@ -1,34 +1,34 @@
-import { pgTable, text, serial, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { sqliteTable, text, integer, blob } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+export const users = sqliteTable("users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
 });
 
-export const products = pgTable("products", {
-  id: serial("id").primaryKey(),
+export const products = sqliteTable("products", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
   description: text("description").notNull(),
   price: integer("price").notNull(), // price in centavos (AOA)
   imageUrl: text("image_url").notNull(),
   category: text("category").notNull(),
-  featured: boolean("featured").notNull().default(false),
+  featured: integer("featured", { mode: "boolean" }).notNull().default(false),
 });
 
-export const orders = pgTable("orders", {
-  id: serial("id").primaryKey(),
+export const orders = sqliteTable("orders", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   customerName: text("customer_name").notNull(),
   customerEmail: text("customer_email").notNull(),
   customerPhone: text("customer_phone"),
-  items: jsonb("items").notNull(), // Array of {productId, quantity, price}
+  items: text("items").notNull(), // JSON string of {productId, quantity, price}
   totalAmount: integer("total_amount").notNull(), // total in centavos (AOA)
   status: text("status").notNull().default("pending"), // pending, processing, shipped, delivered, cancelled
   shippingAddress: text("shipping_address").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({

@@ -1,4 +1,6 @@
 import { users, products, orders, type User, type InsertUser, type Product, type InsertProduct, type Order, type InsertOrder } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -186,39 +188,32 @@ export class MemStorage implements IStorage {
   }
 
   private initializeOrders() {
-    const sampleOrders: InsertOrder[] = [
+    const sampleOrders = [
       {
         customerName: "João Silva",
         customerEmail: "joao.silva@email.com",
         customerPhone: "+244 923 456 789",
-        items: [
-          { productId: 1, quantity: 1, price: 24825000, name: "AirSound Pro" }
-        ],
+        items: '[{"productId":1,"quantity":1,"price":24825000,"name":"AirSound Pro"}]',
         totalAmount: 24825000,
-        status: "delivered",
+        status: "delivered" as const,
         shippingAddress: "Rua da Missão, 123, Luanda, Angola"
       },
       {
         customerName: "Maria Santos",
         customerEmail: "maria.santos@email.com",
         customerPhone: "+244 912 345 678",
-        items: [
-          { productId: 2, quantity: 1, price: 10725000, name: "ChargeFast Station" },
-          { productId: 4, quantity: 1, price: 16600000, name: "AirPods Pro 2" }
-        ],
+        items: '[{"productId":2,"quantity":1,"price":10725000,"name":"ChargeFast Station"},{"productId":4,"quantity":1,"price":16600000,"name":"AirPods Pro 2"}]',
         totalAmount: 27325000,
-        status: "processing",
+        status: "processing" as const,
         shippingAddress: "Av. Talatona, 456, Luanda, Angola"
       },
       {
         customerName: "Carlos Mendes",
         customerEmail: "carlos.mendes@email.com",
         customerPhone: "+244 934 567 890",
-        items: [
-          { productId: 3, quantity: 1, price: 41500000, name: "TimeSync Elite" }
-        ],
+        items: '[{"productId":3,"quantity":1,"price":41500000,"name":"TimeSync Elite"}]',
         totalAmount: 41500000,
-        status: "pending",
+        status: "pending" as const,
         shippingAddress: "Rua Amílcar Cabral, 789, Benguela, Angola"
       }
     ];
@@ -301,4 +296,163 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class SQLiteStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+    return result[0];
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const result = await db.select().from(users).where(eq(users.username, username)).limit(1);
+    return result[0];
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const result = await db.insert(users).values(insertUser).returning();
+    return result[0];
+  }
+
+  async getProducts(): Promise<Product[]> {
+    return await db.select().from(products);
+  }
+
+  async getFeaturedProducts(): Promise<Product[]> {
+    return await db.select().from(products).where(eq(products.featured, true));
+  }
+
+  async getProduct(id: number): Promise<Product | undefined> {
+    const result = await db.select().from(products).where(eq(products.id, id)).limit(1);
+    return result[0];
+  }
+
+  async createProduct(insertProduct: InsertProduct): Promise<Product> {
+    const result = await db.insert(products).values(insertProduct).returning();
+    return result[0];
+  }
+
+  async updateProduct(id: number, insertProduct: InsertProduct): Promise<Product | undefined> {
+    const result = await db.update(products).set(insertProduct).where(eq(products.id, id)).returning();
+    return result[0];
+  }
+
+  async deleteProduct(id: number): Promise<boolean> {
+    const result = await db.delete(products).where(eq(products.id, id));
+    return result.changes > 0;
+  }
+
+  async getOrders(): Promise<Order[]> {
+    return await db.select().from(orders);
+  }
+
+  async getOrder(id: number): Promise<Order | undefined> {
+    const result = await db.select().from(orders).where(eq(orders.id, id)).limit(1);
+    return result[0];
+  }
+
+  async createOrder(insertOrder: InsertOrder): Promise<Order> {
+    const orderData = {
+      ...insertOrder,
+      items: typeof insertOrder.items === 'string' ? insertOrder.items : JSON.stringify(insertOrder.items)
+    };
+    const result = await db.insert(orders).values(orderData).returning();
+    return result[0];
+  }
+
+  async updateOrderStatus(id: number, status: string): Promise<Order | undefined> {
+    const result = await db.update(orders).set({ 
+      status, 
+      updatedAt: new Date() 
+    }).where(eq(orders.id, id)).returning();
+    return result[0];
+  }
+
+  async getDashboardStats(): Promise<{
+    totalProducts: number;
+    totalOrders: number;
+    pendingOrders: number;
+    totalRevenue: number;
+    recentOrders: Order[];
+  }> {
+    const allProducts = await this.getProducts();
+    const allOrders = await this.getOrders();
+    
+    const pendingOrders = allOrders.filter(order => order.status === 'pending').length;
+    const totalRevenue = allOrders.reduce((sum, order) => sum + order.totalAmount, 0);
+    const recentOrders = allOrders.slice(-5);
+
+    return {
+      totalProducts: allProducts.length,
+      totalOrders: allOrders.length,
+      pendingOrders,
+      totalRevenue,
+      recentOrders,
+    };
+  }
+}
+
+export class SQLiteStorageWithInit extends SQLiteStorage {
+  private initialized = false;
+
+  async ensureInitialized() {
+    if (this.initialized) return;
+    
+    // Check if we have products already (direct DB call to avoid recursion)
+    const existingProducts = await db.select().from(products);
+    
+    if (existingProducts.length === 0) {
+      // Add sample products
+      const sampleProducts = [
+        {
+          name: "AirSound Pro",
+          description: "Fones de ouvido sem fio premium com cancelamento de ruído avançado e qualidade de som excepcional.",
+          price: 75000, // 750 AOA
+          imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=500&fit=crop",
+          category: "AirPods" as const,
+          featured: true,
+        },
+        {
+          name: "iPhone 15 Pro",
+          description: "O mais avançado iPhone com chip A17 Pro, sistema de câmera Pro e design em titânio.",
+          price: 500000, // 5000 AOA
+          imageUrl: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500&h=500&fit=crop",
+          category: "iPhone" as const,
+          featured: true,
+        },
+        {
+          name: "PowerCharge Pro",
+          description: "Carregador sem fio rápido compatível com todos os dispositivos Apple. Design elegante e eficiente.",
+          price: 25000, // 250 AOA
+          imageUrl: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=500&h=500&fit=crop",
+          category: "Carregadores" as const,
+          featured: false,
+        },
+        {
+          name: "MacBook Pro 16\"",
+          description: "Performance excepcional com chip M3 Pro, display Liquid Retina XDR e bateria para o dia todo.",
+          price: 1200000, // 12000 AOA
+          imageUrl: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop",
+          category: "Mac" as const,
+          featured: true,
+        },
+      ];
+
+      for (const product of sampleProducts) {
+        await this.createProduct(product);
+      }
+    }
+
+    this.initialized = true;
+  }
+
+  async getProducts(): Promise<Product[]> {
+    await this.ensureInitialized();
+    return await db.select().from(products);
+  }
+
+  async getFeaturedProducts(): Promise<Product[]> {
+    await this.ensureInitialized();
+    return super.getFeaturedProducts();
+  }
+}
+
+export const storage = new SQLiteStorageWithInit();
