@@ -529,13 +529,21 @@ export class SQLiteStorageWithInit extends SQLiteStorage {
     
     if (existingProducts.length === 0) {
       // Add sample products
+      // Get created categories to link products
+      const allCategories = await db.select().from(categories);
+      const iphoneCategory = allCategories.find(c => c.slug === "iphone");
+      const macCategory = allCategories.find(c => c.slug === "mac");
+      const airpodsCategory = allCategories.find(c => c.slug === "airpods");
+      const acessoriosCategory = allCategories.find(c => c.slug === "acessorios");
+
       const sampleProducts = [
         {
           name: "AirSound Pro",
           description: "Fones de ouvido sem fio premium com cancelamento de ruído avançado e qualidade de som excepcional.",
           price: 75000, // 750 AOA
           imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=500&fit=crop",
-          category: "AirPods" as const,
+          categoryId: airpodsCategory?.id || null,
+          subcategoryId: null,
           featured: true,
         },
         {
@@ -543,7 +551,8 @@ export class SQLiteStorageWithInit extends SQLiteStorage {
           description: "O mais avançado iPhone com chip A17 Pro, sistema de câmera Pro e design em titânio.",
           price: 500000, // 5000 AOA
           imageUrl: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500&h=500&fit=crop",
-          category: "iPhone" as const,
+          categoryId: iphoneCategory?.id || null,
+          subcategoryId: null,
           featured: true,
         },
         {
@@ -551,7 +560,8 @@ export class SQLiteStorageWithInit extends SQLiteStorage {
           description: "Carregador sem fio rápido compatível com todos os dispositivos Apple. Design elegante e eficiente.",
           price: 25000, // 250 AOA
           imageUrl: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=500&h=500&fit=crop",
-          category: "Carregadores" as const,
+          categoryId: acessoriosCategory?.id || null,
+          subcategoryId: null,
           featured: false,
         },
         {
@@ -559,7 +569,8 @@ export class SQLiteStorageWithInit extends SQLiteStorage {
           description: "Performance excepcional com chip M3 Pro, display Liquid Retina XDR e bateria para o dia todo.",
           price: 1200000, // 12000 AOA
           imageUrl: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop",
-          category: "Mac" as const,
+          categoryId: macCategory?.id || null,
+          subcategoryId: null,
           featured: true,
         },
       ];

@@ -14,17 +14,24 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { insertProductSchema, type Product, type InsertProduct } from "@shared/schema";
-
-const categories = ["Fones", "Carregadores", "Relógios", "Outros"] as const;
+import { insertProductSchema, type Product, type InsertProduct, type Category, type Subcategory } from "@shared/schema";
 
 export default function AdminProducts() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data: products = [], isLoading } = useQuery<Product[]>({
     queryKey: ['/api/products'],
+  });
+
+  const { data: categories = [] } = useQuery<Category[]>({
+    queryKey: ['/api/categories'],
+  });
+
+  const { data: subcategories = [] } = useQuery<Subcategory[]>({
+    queryKey: ['/api/subcategories'],
   });
 
   const form = useForm<InsertProduct>({
@@ -34,7 +41,8 @@ export default function AdminProducts() {
       description: "",
       price: 0,
       imageUrl: "",
-      category: "Outros",
+      categoryId: null,
+      subcategoryId: null,
       featured: false,
     },
   });

@@ -14,7 +14,8 @@ export const products = sqliteTable("products", {
   description: text("description").notNull(),
   price: integer("price").notNull(), // price in centavos (AOA)
   imageUrl: text("image_url").notNull(),
-  category: text("category").notNull(),
+  categoryId: integer("category_id").references(() => categories.id),
+  subcategoryId: integer("subcategory_id").references(() => subcategories.id),
   featured: integer("featured", { mode: "boolean" }).notNull().default(false),
 });
 
@@ -61,8 +62,6 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export const insertProductSchema = createInsertSchema(products).omit({
   id: true,
-}).extend({
-  category: z.enum(["iPhone", "Mac", "iPad", "Watch", "AirPods", "Fones", "Carregadores", "Relógios", "Outros"]),
 });
 
 export const insertOrderSchema = createInsertSchema(orders).omit({

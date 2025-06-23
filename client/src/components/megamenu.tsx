@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import type { Category, Subcategory } from '@shared/schema';
 
 interface MegaMenuData {
   [key: string]: {
@@ -9,7 +11,8 @@ interface MegaMenuData {
   };
 }
 
-const megaMenuData: MegaMenuData = {
+// Fallback data for when categories are loading
+const fallbackMegaMenuData: MegaMenuData = {
   'iPhone': {
     sections: [
       {
@@ -235,6 +238,62 @@ interface MegaMenuProps {
 
 export default function MegaMenu({ activeCategory, onClose }: MegaMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // Fetch categories with subcategories from API
+  const { data: categoriesWithSubs = [] } = useQuery<(Category & { subcategories: Subcategory[] })[]>({
+    queryKey: ['/api/categories/with-subcategories'],
+  });
+
+  // Build dynamic menu data from database categories
+  const buildMegaMenuData = (): MegaMenuData => {
+    const menuData: MegaMenuData = {};
+    
+    categoriesWithSubs.forEach(category => {
+      if (!category.isActive) return;
+      
+      const sections = [];
+      
+      // Add main section with category exploration
+      sections.push({
+        title: `Explore ${category.name}`,
+        items: [
+          `Explore All ${category.name}`,
+          ...category.subcategories
+            .filter(sub => sub.isActive)
+            .slice(0, 4)
+            .map(sub => sub.name)
+        ]
+      });
+
+      // Add shop section
+      sections.push({
+        title: `Shop ${category.name}`,
+        items: [
+          `Shop ${category.name}`,
+          `${category.name} Accessories`,
+          'Apple Trade In',
+          'Financing'
+        ]
+      });
+
+      // Add support section
+      sections.push({
+        title: `More from ${category.name}`,
+        items: [
+          `${category.name} Support`,
+          `AppleCare+ for ${category.name}`,
+          'Customer Service',
+          'Warranty'
+        ]
+      });
+
+      menuData[category.name] = { sections };
+    });
+
+    return menuData;
+  };
+
+  const megaMenuData = categoriesWithSubs.length > 0 ? buildMegaMenuData() : fallbackMegaMenuData;
   
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

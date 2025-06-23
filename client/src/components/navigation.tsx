@@ -1,11 +1,13 @@
 import { ShoppingBag, Search, Settings } from "lucide-react";
 import { useState } from "react";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { useCart } from "@/hooks/use-cart";
 import CartSidebar from "@/components/cart-sidebar";
 import MegaMenu from "@/components/megamenu";
 import SearchOverlay from "@/components/search-overlay";
 import SupportMenu from "@/components/support-menu";
+import type { Category } from "@shared/schema";
 
 export default function Navigation() {
   const { getTotalItems } = useCart();
@@ -14,18 +16,18 @@ export default function Navigation() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSupportHovered, setIsSupportHovered] = useState(false);
 
-  const categories = [
-    'Store',
-    'Mac',
-    'iPad',
-    'iPhone',
-    'Watch',
-    'Vision',
-    'AirPods',
-    'TV & Home',
-    'Entertainment',
-    'Accessories'
-  ];
+  // Fetch categories from database
+  const { data: categories = [] } = useQuery<Category[]>({
+    queryKey: ['/api/categories'],
+  });
+
+  // Filter active categories and sort by sortOrder
+  const activeCategories = categories
+    .filter(cat => cat.isActive)
+    .sort((a, b) => a.sortOrder - b.sortOrder);
+
+  // Add Store as first item and Support items as needed
+  const navigationItems = ['Store', ...activeCategories.map(cat => cat.name), 'Suporte'];
 
   const handleCategoryHover = (category: string) => {
     setActiveCategory(category);
@@ -63,23 +65,31 @@ export default function Navigation() {
 
             {/* Menu Central */}
             <div className="hidden md:flex items-center space-x-8">
-              {categories.map((category) => (
-                category === 'iPhone' ? (
-                  <Link key={category} href="/iphone">
+              {navigationItems.map((item) => (
+                item === 'iPhone' ? (
+                  <Link key={item} href="/iphone">
                     <button
-                      onMouseEnter={() => handleCategoryHover(category)}
+                      onMouseEnter={() => handleCategoryHover(item)}
                       className="menu-item apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal py-2 focus-micro"
                     >
-                      {category}
+                      {item}
                     </button>
                   </Link>
-                ) : (
+                ) : item === 'Suporte' ? (
                   <button
-                    key={category}
-                    onMouseEnter={() => handleCategoryHover(category)}
+                    key={item}
+                    onMouseEnter={handleSupportHover}
                     className="menu-item apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal py-2 focus-micro"
                   >
-                    {category}
+                    {item}
+                  </button>
+                ) : (
+                  <button
+                    key={item}
+                    onMouseEnter={() => handleCategoryHover(item)}
+                    className="menu-item apple-text-medium hover:apple-text-gray apple-transition text-sm font-normal py-2 focus-micro"
+                  >
+                    {item}
                   </button>
                 )
               ))}
