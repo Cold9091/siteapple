@@ -3,10 +3,48 @@ import { useState, useEffect } from "react";
 
 export default function HeroSection() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [currentProductIndex, setCurrentProductIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const products = [
+    {
+      name: "AirSound Pro",
+      subtitle: "Som cristalino.",
+      description: "Performance excepcional com tecnologia avançada."
+    },
+    {
+      name: "iPhone 16 Pro",
+      subtitle: "Titanium. So strong. So light. So Pro.",
+      description: "O iPhone mais avançado já criado."
+    },
+    {
+      name: "TimeSync Elite",
+      subtitle: "Your essential companion.",
+      description: "Smartwatch com monitoramento avançado de saúde."
+    },
+    {
+      name: "ChargeFast Station",
+      subtitle: "Power everything.",
+      description: "Carregamento inteligente para múltiplos dispositivos."
+    }
+  ];
 
   useEffect(() => {
     setIsLoaded(true);
-  }, []);
+    
+    const interval = setInterval(() => {
+      setIsAnimating(true);
+      
+      setTimeout(() => {
+        setCurrentProductIndex((prevIndex) => 
+          (prevIndex + 1) % products.length
+        );
+        setIsAnimating(false);
+      }, 300);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [products.length]);
 
   const handleLearnMore = () => {
     const element = document.getElementById('products');
@@ -22,6 +60,16 @@ export default function HeroSection() {
     }
   };
 
+  const handleProductChange = (index: number) => {
+    if (index !== currentProductIndex) {
+      setIsAnimating(true);
+      setTimeout(() => {
+        setCurrentProductIndex(index);
+        setIsAnimating(false);
+      }, 300);
+    }
+  };
+
   return (
     <section className="pt-12 bg-gradient-to-b from-blue-50 via-blue-75 to-blue-100 relative overflow-hidden">
       {/* Animated background elements */}
@@ -33,14 +81,14 @@ export default function HeroSection() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 relative z-10">
         <div className="text-center">
-          <h1 className={`text-5xl sm:text-6xl lg:text-7xl font-normal apple-text-gray mb-4 tracking-tight transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            AirSound Pro
+          <h1 className={`text-5xl sm:text-6xl lg:text-7xl font-normal apple-text-gray mb-4 tracking-tight transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+            {products[currentProductIndex].name}
           </h1>
-          <h2 className={`text-2xl sm:text-3xl apple-text-gray mb-2 font-light transition-all duration-1000 delay-200 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            Som cristalino.
+          <h2 className={`text-2xl sm:text-3xl apple-text-gray mb-2 font-light transition-all duration-700 delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+            {products[currentProductIndex].subtitle}
           </h2>
-          <h3 className={`text-2xl sm:text-3xl apple-text-gray mb-12 font-light transition-all duration-1000 delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            Performance excepcional com tecnologia avançada.
+          <h3 className={`text-2xl sm:text-3xl apple-text-gray mb-12 font-light transition-all duration-700 delay-200 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+            {products[currentProductIndex].description}
           </h3>
           
           <div className={`flex justify-center space-x-6 mb-16 transition-all duration-1000 delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -61,7 +109,22 @@ export default function HeroSection() {
 
 
 
-          <div className={`mt-16 text-center transition-all duration-1000 delay-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Product indicators */}
+          <div className={`flex justify-center space-x-3 mb-8 transition-all duration-1000 delay-800 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            {products.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handleProductChange(index)}
+                className={`h-2 rounded-full transition-all duration-500 cursor-pointer hover:scale-110 ${
+                  index === currentProductIndex 
+                    ? 'bg-blue-600 w-8' 
+                    : 'bg-gray-300 hover:bg-gray-400 w-2'
+                }`}
+              />
+            ))}
+          </div>
+
+          <div className={`mt-8 text-center transition-all duration-1000 delay-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <p className="text-lg font-medium mb-2">
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent animate-pulse">
                 Criado para Inteligência Digital.
