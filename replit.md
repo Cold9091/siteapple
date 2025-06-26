@@ -87,6 +87,13 @@ Located in `shared/schema.ts`:
 - **Auto-deployment**: Configured for autoscale deployment
 - **Port Configuration**: Development on 5000, production on 80
 
+### Vercel Deployment
+- **Serverless Functions**: API routes converted to serverless functions in `/api/`
+- **Static Assets**: Frontend builds to `dist/public` for static hosting
+- **Database**: PostgreSQL via environment variable `DATABASE_URL`
+- **Build Process**: `npm run build` compiles both frontend and backend
+- **Configuration**: `vercel.json` defines routing and function settings
+
 ## Changelog
 ```
 Changelog:
@@ -119,6 +126,12 @@ Changelog:
   * Added focus states for accessibility with ring animations
   * Enhanced user feedback with subtle scaling and color changes
   * Applied micro-interactions to navigation, product cards, buttons, and menu items
+- June 26, 2025. Completed full checkout system and order management
+  * Implemented complete checkout form with address and payment method selection
+  * Created comprehensive order management system in admin panel
+  * Added order status tracking and update functionality
+  * Integrated PostgreSQL database for persistent data storage
+  * Prepared project for Vercel deployment with serverless architecture
 ```
 
 ## User Preferences
