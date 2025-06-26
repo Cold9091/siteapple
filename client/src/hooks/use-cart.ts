@@ -84,6 +84,7 @@ export function useCart() {
 
   return {
     cartItems,
+    items: cartItems, // alias for compatibility
     addToCart,
     removeFromCart,
     updateQuantity,

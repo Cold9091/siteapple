@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/hooks/use-cart";
+import CheckoutForm from "@/components/checkout-form";
 import type { Product } from "@shared/schema";
 
 export default function ProductGrid() {
@@ -11,6 +13,7 @@ export default function ProductGrid() {
   });
   const { addToCart } = useCart();
   const { toast } = useToast();
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   const formatPrice = (priceInCentavos: number) => {
     return new Intl.NumberFormat('pt-AO', {
@@ -19,12 +22,17 @@ export default function ProductGrid() {
     }).format(priceInCentavos / 100);
   };
 
-  const handlePurchase = (product: Product) => {
+  const handleAddToCart = (product: Product) => {
     addToCart(product);
     toast({
       title: "Produto adicionado!",
       description: `${product.name} foi adicionado ao seu carrinho.`,
     });
+  };
+
+  const handleBuyNow = (product: Product) => {
+    addToCart(product);
+    setIsCheckoutOpen(true);
   };
 
   if (error) {
@@ -98,7 +106,7 @@ export default function ProductGrid() {
                     {formatPrice(product.price)}
                   </p>
                   <Button
-                    onClick={() => handlePurchase(product)}
+                    onClick={() => handleBuyNow(product)}
                     className="bg-[hsl(207,90%,54%)] hover:bg-[hsl(207,90%,48%)] text-white px-8 py-3 rounded-full font-medium apple-transition hover:shadow-lg hover:scale-105"
                   >
                     Comprar
@@ -109,6 +117,11 @@ export default function ProductGrid() {
           )}
         </div>
       </div>
+
+      <CheckoutForm 
+        isOpen={isCheckoutOpen} 
+        onClose={() => setIsCheckoutOpen(false)} 
+      />
     </section>
   );
 }

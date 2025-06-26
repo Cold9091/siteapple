@@ -17,7 +17,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import AdminProducts from "../components/admin/admin-products-updated";
-import AdminOrders from "../components/admin/admin-orders";
+import AdminOrdersUpdated from "../components/admin/admin-orders-updated";
 import AdminSettings from "../components/admin/admin-settings";
 import AdminFeatured from "../components/admin/admin-featured";
 import AdminCategories from "../components/admin/admin-categories";
@@ -185,7 +185,7 @@ export default function AdminDashboard() {
       case "products":
         return <AdminProducts />;
       case "orders":
-        return <AdminOrders />;
+        return <AdminOrdersUpdated />;
       case "featured":
         return <AdminFeatured />;
       case "categories":

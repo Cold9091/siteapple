@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/hooks/use-cart";
+import CheckoutForm from "@/components/checkout-form";
 import type { Product } from "@shared/schema";
 
 export default function FeaturedProductsSection() {
@@ -11,6 +13,7 @@ export default function FeaturedProductsSection() {
   });
   const { addToCart } = useCart();
   const { toast } = useToast();
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   const formatPrice = (priceInCentavos: number) => {
     return new Intl.NumberFormat('pt-AO', {
@@ -19,12 +22,17 @@ export default function FeaturedProductsSection() {
     }).format(priceInCentavos / 100);
   };
 
-  const handlePurchase = (product: Product) => {
+  const handleAddToCart = (product: Product) => {
     addToCart(product);
     toast({
       title: "Produto adicionado!",
       description: `${product.name} foi adicionado ao seu carrinho.`,
     });
+  };
+
+  const handleBuyNow = (product: Product) => {
+    addToCart(product);
+    setIsCheckoutOpen(true);
   };
 
   if (error) {
@@ -107,7 +115,7 @@ export default function FeaturedProductsSection() {
                     
                     <div className="flex space-x-3">
                       <Button
-                        onClick={() => handlePurchase(product)}
+                        onClick={() => handleBuyNow(product)}
                         size={index === 0 ? "default" : "sm"}
                         className="btn-micro bg-white/20 hover:bg-white/30 text-white border border-white/30 backdrop-blur-sm rounded-full focus-micro"
                       >
@@ -177,7 +185,7 @@ export default function FeaturedProductsSection() {
                       {formatPrice(product.price)}
                     </p>
                     <Button
-                      onClick={() => handlePurchase(product)}
+                      onClick={() => handleBuyNow(product)}
                       size="sm"
                       className="btn-micro bg-[hsl(207,90%,54%)] hover:bg-[hsl(207,90%,48%)] text-white rounded-full font-medium focus-micro w-full"
                     >
@@ -190,6 +198,11 @@ export default function FeaturedProductsSection() {
           </div>
         </div>
       </div>
+
+      <CheckoutForm 
+        isOpen={isCheckoutOpen} 
+        onClose={() => setIsCheckoutOpen(false)} 
+      />
     </section>
   );
 }
