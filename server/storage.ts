@@ -295,7 +295,60 @@ export class DatabaseStorageWithInit extends DatabaseStorage {
         sortOrder: 2,
       });
 
-      // Create sample products
+      // Create sample products (demonstrativos)
+      const demoProducts = [
+        {
+          name: "iPhone 15",
+          description: "Modelo base com chip A17 e câmera dupla",
+          price: 259900,
+          imageUrl: "https://images.unsplash.com/photo-1603898037225-dab63cd10097?auto=format&fit=crop&q=80&w=500",
+          categoryId: iphoneCategory.id,
+          subcategoryId: null,
+          featured: false,
+        },
+        {
+          name: "iPhone 15 Pro",
+          description: "Modelo Pro com tela ProMotion e câmera tripla",
+          price: 339900,
+          imageUrl: "https://images.unsplash.com/photo-1630095718983-8d375280dcd6?auto=format&fit=crop&q=80&w=500",
+          categoryId: iphoneCategory.id,
+          subcategoryId: null,
+          featured: true,
+        },
+        {
+          name: "Cabo Lightning 2m",
+          description: "Cabo de carregamento Lightning oficial Apple",
+          price: 29900,
+          imageUrl: "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&q=80&w=500",
+          categoryId: accessoriesCategory.id,
+          subcategoryId: null,
+          featured: false,
+        },
+        {
+          name: "Carregador MagSafe",
+          description: "Carregador sem fio rápido MagSafe (15W)",
+          price: 59900,
+          imageUrl: "https://images.unsplash.com/photo-1606813909390-07c1e9eecc75?auto=format&fit=crop&q=80&w=500",
+          categoryId: accessoriesCategory.id,
+          subcategoryId: null,
+          featured: true,
+        },
+        {
+          name: "Apple Watch Series 10",
+          description: "Smartwatch com ECG, oxímetro e tela Always-On",
+          price: 199900,
+          imageUrl: "https://images.unsplash.com/photo-1606665483320-825ca9e1edc3?auto=format&fit=crop&q=80&w=500",
+          categoryId: accessoriesCategory.id,
+          subcategoryId: null,
+          featured: true,
+        },
+      ];
+
+      for (const p of demoProducts) {
+        await this.createProduct(p);
+      }
+
+      // Produtos anteriores
       await this.createProduct({
         name: "AirSound Pro",
         description: "Fones de ouvido sem fio com cancelamento de ruído ativo",
