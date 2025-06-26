@@ -1,0 +1,19 @@
+# Netlify deployment configuration
+# Build the Vite React client and publish the static dist folder
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Set a recent Node version that supports ES Modules
+[build.environment]
+  NODE_VERSION = "18"
+
+# Ignore server directory for static deployment
+[[ignore]]
+  path = "server/*"
+
+# Optional: redirect all routes to index.html for client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
