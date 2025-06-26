@@ -4,13 +4,13 @@
   "outputDirectory": "dist/public",
   "functions": {
     "api/*.js": {
-      "runtime": "nodejs20.x"
+      "runtime": "nodejs18.x"
     }
   },
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api"
+      "dest": "/api/$1"
     },
     {
       "src": "/(.*)",
